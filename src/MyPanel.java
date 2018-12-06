@@ -7,6 +7,7 @@ import javax.swing.*;
  */ 
 public class MyPanel extends JPanel implements KeyListener, MouseListener{
 
+	private int Choice;
 	JLabel label2 = new JLabel("");
 	static int i = 1;
 	private static final long serialVersionUID = 1L;
@@ -20,26 +21,23 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	  // 单个图像大小，我默认采用32x32 图形,可根据需要调整比例。
 	  // 当时，始终应和窗体大小比例协调；比如32x32 的图片，如何 
 	  //  一行设置15个，那么就是480, 也就是本例子默认的窗体大小， 
-	  // 当然，我们也可以根据ROWCS,COlCS 在初始化时自动调整 
-	  //  窗体大小，以后的例子中会用到类似情况。总之一句话，编程
-	  // 是[为目的而存在的]，所有的方法，大家都可任意尝试和使用。
 	  
 	  private static final int CS = 32;
 	   // 设定地图
 	  private int[][] map = {
-	  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} ,
+	  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	  {1,0,1,0,0,0,0,0,0,0,0,0,1,0,1},
 	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	  {1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
 	  {1,0,0,0,0,1,1,1,1,1,0,0,0,0,1}, 
 	  {1,0,0,0,0,1,0,0,1,1,0,0,0,0,1},
 	  {1,0,0,0,0,1,0,0,0,1,0,0,0,0,1}, 
 	  {1,0,0,0,0,1,0,0,0,1,0,0,0,0,1},
 	  {1,0,0,0,0,1,1,0,1,1,0,0,0,0,1}, 
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+	  {1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
+	  {1,0,0,1,0,0,0,0,0,0,0,0,0,0,1}, 
+	  {1,0,1,0,0,0,0,0,0,0,0,0,1,0,1},
 	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
 	  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
   
@@ -63,17 +61,18 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	private int direction; //新增变量，用以确认角色所对方向,对应按键触发
 	
 	public MyPanel() {
-		Example1.Role[i].Hp = Example1.Role[i].Hp - 10;
+		Example1.Role[i].Hp = Example1.Role[i].Hp-10;
 		// 设定初始构造时面板大小
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		// 于初始化时载入图形
-		loadImage();
+		if(Choice == 0)
+			loadImage();
+		else
+			loadImage1();
 		x = 1; //角色起始坐标
 		y = 1;
 		direction=DOWN; 
 		//默认为角色向下
-		//在面板构建时赋予计步器初值
-		count = 0;
 		//设定焦点在本窗体并付与监听对象
 		setFocusable(true);
 		addKeyListener(this);
@@ -105,9 +104,24 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 
 	// 载入图像
 	private void loadImage() {
-		// 获得当前类对应的相对位置image 文件夹下的地板图像
-		ImageIcon icon = new ImageIcon(getClass()
-				.getResource("image/000草地.png"));
+		// 获得当前类对应的相对位置image 文件夹下的地板图像	
+		ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
+			//ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
+		// 将地板图像实例付与floorImage
+		floorImage = icon.getImage();
+		// 获得当前类对应的相对位置image 文件夹下的墙体图像
+		icon = new ImageIcon(getClass().getResource("image/wall.gif"));
+		// 将墙体图像实例付与wallImage
+		wallImage = icon.getImage();
+		//导入个[英雄]来当主角
+		icon = new ImageIcon(getClass().getResource("image/hero.jpg"));
+		roleImage = icon.getImage();
+	}
+	
+	private void loadImage1() {
+		// 获得当前类对应的相对位置image 文件夹下的地板图像	
+		ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
+			//ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
 		// 将地板图像实例付与floorImage
 		floorImage = icon.getImage();
 		// 获得当前类对应的相对位置image 文件夹下的墙体图像
@@ -273,9 +287,11 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		}
 		
 		public void keyReleased(KeyEvent e) {
+			
 		}
 		
 		public void keyTyped(KeyEvent e) {
+			
 		}
 		
 		//内部类，用于处理计步动作。
@@ -316,7 +332,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					//repaint();
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -332,7 +348,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					repaint();
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -348,7 +364,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					repaint();
 				}
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -364,7 +380,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					repaint();
 				}
 				try {
-					Thread.sleep(10);
+					Thread.sleep(100);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -374,17 +390,14 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-	
 		}
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
   }
   
