@@ -359,8 +359,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					e1.printStackTrace();
 				}
 			}
-			//System.out.print(x + " ");
-			//System.out.println(y);
 		}
 
 		@Override
