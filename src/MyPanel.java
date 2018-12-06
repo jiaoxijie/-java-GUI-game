@@ -23,6 +23,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
   // 当然，我们也可以根据ROWCS,COlCS 在初始化时自动调整 
   //  窗体大小，以后的例子中会用到类似情况。总之一句话，编程
   // 是[为目的而存在的]，所有的方法，大家都可任意尝试和使用。
+  
   private static final int CS = 32;
    // 设定地图
   private int[][] map = {{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} ,
@@ -367,13 +368,11 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 			// TODO Auto-generated method stub
 	
 		}
-
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub

@@ -32,7 +32,7 @@ public Example1() {
 
 public static void main(String[] args) {
 	Random rand = new Random();
-	int i, k;
+	//int i, k;
 	Example1 e1 = new Example1();
 	// 设定允许窗体关闭操作
 	e1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
