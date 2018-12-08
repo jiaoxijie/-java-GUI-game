@@ -265,7 +265,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		public void keyTyped(KeyEvent e) {	
 		}
 		
-		//内部类，用于处理计步动作。
 		private class AnimationThread extends Thread {
 			public synchronized void run() {
 				while (true) {
@@ -277,7 +276,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					}
 				}
 			}
-		}//内部类结束
+		}
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
