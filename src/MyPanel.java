@@ -7,7 +7,7 @@ import javax.swing.*;
  */ 
 public class MyPanel extends JPanel implements KeyListener, MouseListener{
 
-	private int Choice;
+	private int Choice = 1;
 	JLabel label2 = new JLabel("");
 	static int i = 1;
 	private static final long serialVersionUID = 1L;
@@ -16,37 +16,38 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	  private static final int HEIGHT = 480;
 	   // 设定背景方格默认行数  
 	  private static final int ROW = 15;
-	   // 设定背景方格默认列数  
+	   // 设定背景方格默认列数  9
 	  private static final int COL = 15;
 	  // 单个图像大小，我默认采用32x32 图形,可根据需要调整比例。
 	  // 当时，始终应和窗体大小比例协调；比如32x32 的图片，如何 
 	  //  一行设置15个，那么就是480, 也就是本例子默认的窗体大小， 
-	  
 	  private static final int CS = 32;
 	   // 设定地图
 	  private int[][] map = {
 	  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
 	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
-	  {1,0,1,0,0,0,0,0,0,0,0,0,1,0,1},
-	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
+	  {1,0,1,0,2,0,0,0,0,0,0,0,1,0,1},
+	  {1,0,0,0,0,0,0,0,0,0,0,2,0,0,1}, 
 	  {1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
 	  {1,0,0,0,0,1,1,1,1,1,0,0,0,0,1}, 
 	  {1,0,0,0,0,1,0,0,1,1,0,0,0,0,1},
 	  {1,0,0,0,0,1,0,0,0,1,0,0,0,0,1}, 
-	  {1,0,0,0,0,1,0,0,0,1,0,0,0,0,1},
+	  {1,0,0,0,0,1,0,2,0,1,0,0,0,0,1},
 	  {1,0,0,0,0,1,1,0,1,1,0,0,0,0,1}, 
 	  {1,0,0,0,1,0,0,0,0,0,1,0,0,0,1},
-	  {1,0,0,1,0,0,0,0,0,0,0,0,0,0,1}, 
-	  {1,0,1,0,0,0,0,0,0,0,0,0,1,0,1},
+	  {1,0,0,1,0,0,2,0,0,0,0,0,0,0,1}, 
+	  {1,0,1,0,2,0,0,0,0,2,0,0,1,0,1},
 	  {1,0,0,0,0,0,0,0,0,0,0,0,0,0,1}, 
 	  {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}};
-  
+	  
+	//蜜蜂图像
+	private Image beeImage;
     // 设定显示图像对象
 	private Image floorImage;
 	private Image wallImage;
 	//新增了一个角色
 	private Image roleImage;
-	//角色坐标
+	//角色坐标	
 	private int x, y;
 	//此处我们添加一组常数，用以区别左右上下按键的触发，
 	//之所以采用数字进行区别，原因大家都很清楚^^，数字
@@ -101,11 +102,10 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 				count*CS, 0, CS+count*CS, CS, this);
 	}
 
-
 	// 载入图像
 	private void loadImage() {
 		// 获得当前类对应的相对位置image 文件夹下的地板图像	
-		ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("image/草地.png"));
 			//ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
 		// 将地板图像实例付与floorImage
 		floorImage = icon.getImage();
@@ -120,17 +120,19 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	
 	private void loadImage1() {
 		// 获得当前类对应的相对位置image 文件夹下的地板图像	
-		ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("image/沙漠.jpg"));
 			//ImageIcon icon = new ImageIcon(getClass().getResource("image/000草地.png"));
 		// 将地板图像实例付与floorImage
 		floorImage = icon.getImage();
 		// 获得当前类对应的相对位置image 文件夹下的墙体图像
-		icon = new ImageIcon(getClass().getResource("image/wall.gif"));
+		icon = new ImageIcon(getClass().getResource("image/仙人掌.jpg"));
 		// 将墙体图像实例付与wallImage
 		wallImage = icon.getImage();
 		//导入个[英雄]来当主角
 		icon = new ImageIcon(getClass().getResource("image/hero.jpg"));
 		roleImage = icon.getImage();
+		icon = new ImageIcon(getClass().getResource("image/蜜蜂.jpg"));
+		beeImage = icon.getImage();
 	}
   
 	private void drawMap(Graphics g) {  
@@ -148,6 +150,9 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					break;
 					// 我们可以依次类推出无数的背景组合，如定义椅子为2、宝座为3等 
 					//很容易即可勾勒出一张背景地图。
+				case 2 :
+					g.drawImage(beeImage, j * CS, x*CS, this);
+					break;
 				default: // 当所有case 值皆不匹配时，将执行此操作。
 					break; 
 				}
@@ -155,39 +160,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		}
 		//g.drawImage(roleImage, 240, 240, this);
 	}
-
-  /*public void keyPressed(KeyEvent e) {
-		//获得按键编号
-		int keyCode = e.getKeyCode();
-		//通过转换器匹配事件
-		switch (keyCode) {
-		//当触发Left 时
-		case KeyEvent.VK_LEFT :
-			// X--，即向左移动一方格
-			x--;
-			break;
-			//当触发Right 时
-		case KeyEvent.VK_RIGHT :
-			// X++，即向右移动一方格
-			x++;
-			break;
-			//当触发Up 时
-		case KeyEvent.VK_UP :
-			// y--,即向上移动一方格
-			y--;
-			break;
-			//当触发Down 时
-		case KeyEvent.VK_DOWN :
-			// y++,即向下移动一方格
-			y++;
-			break;
-		}
-		// 重新绘制窗体图像
-		// PS:在此例程中，仅进行了角色的简单移动处理
-		// 关于避免闪烁及限制活动区域问题，请见后续
-		// 案例。
-		repaint();
-	}*/
 	
 	public void keyPressed(KeyEvent e) {
 		//获得按键编号
@@ -232,14 +204,15 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		// 在本例中我仅以0 作为地板的参数，1 作为
 		// 墙的参数，由于我们的主角是[人类]，而
 		// 不是[幽灵]，所以当他要[撞墙]时，我们
-		// 当然不会允许，至少，是我讲到剧情的触发
-		// 以前……
+		// 当然不会允许
 		if (map[y][x] == 1) {
 			// 不允许移动时，返回[假]
 			return false;
 		}
-		else {
+		if (map[y][x] == 2){
 			Example1.Role[1].Hp -= 10;
+			this.x--;
+			this.y--;
 			if(Example1.Role[1].Hp <= 0)
 			{
 				label2.setOpaque(true);
@@ -287,11 +260,9 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		}
 		
 		public void keyReleased(KeyEvent e) {
-			
 		}
 		
-		public void keyTyped(KeyEvent e) {
-			
+		public void keyTyped(KeyEvent e) {	
 		}
 		
 		//内部类，用于处理计步动作。
@@ -299,7 +270,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 			public synchronized void run() {
 				while (true) {
 					repaint();
-					//System.out.println("sdsdss");
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
@@ -312,7 +282,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
@@ -345,7 +314,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					System.out.println(this.x);
 					direction = LEFT;
 					// 重绘画面。
-					repaint();
+					//repaint();
 				}
 				try {
 					Thread.sleep(100);
@@ -391,10 +360,12 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
 		}
+		
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// TODO Auto-generated method stub
 		}
+		
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -403,4 +374,3 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
   
 
   
- 
