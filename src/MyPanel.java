@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
+
 import javax.swing.*;
 
 /* 
@@ -58,10 +60,12 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	private static final int DOWN = 3;
 	//增加计步器
 	private int count;
+	private Thread otherHero;
 	private Thread threadAnime;
 	private int direction; //新增变量，用以确认角色所对方向,对应按键触发
 	
 	public MyPanel() {
+		Random rand = new Random();
 		Example1.Role[i].Hp = Example1.Role[i].Hp-10;
 		// 设定初始构造时面板大小
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -78,6 +82,14 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		setFocusable(true);
 		addKeyListener(this);
 		addMouseListener(this);
+		
+		//实例化内部线程uncontrol, 用来控制非玩家控制英雄。
+		for(int i = 0; i < 9; i++) {
+			int x = rand.nextInt(15);
+			int y = rand.nextInt(15);
+			otherHero = new Thread(new uncontrol(x, y));
+		}
+			
 		//实例化内部线程AnimationThread
 		for(int i = 0; i < 10; i++)
 		{
@@ -129,7 +141,27 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		// 将墙体图像实例付与wallImage
 		wallImage = icon.getImage();
 		//导入个[英雄]来当主角
-		icon = new ImageIcon(getClass().getResource("image/hero.jpg"));
+		switch (Choice)
+		{
+		case 1:
+			icon = new ImageIcon(getClass().getResource("image/绿巨人.jpg"));
+			break;
+		case 2:
+			icon = new ImageIcon(getClass().getResource("image/钢铁侠.jpg"));
+			break;
+		case 3:
+			icon = new ImageIcon(getClass().getResource("image/鹰眼.jpg"));
+			break;
+		case 4:
+			icon = new ImageIcon(getClass().getResource("image/美国队长.jpg"));
+			break;
+		case 5:
+			icon = new ImageIcon(getClass().getResource("image/黑寡妇.jpg"));
+			break;
+		case 6:
+			icon = new ImageIcon(getClass().getResource("image/雷神.jpg"));
+			break;
+		}
 		roleImage = icon.getImage();
 		icon = new ImageIcon(getClass().getResource("image/蜜蜂.jpg"));
 		beeImage = icon.getImage();
@@ -141,7 +173,7 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 			for (int j = 0; j < COL ; j++) {  
 				switch (map[x][j]) { 
 				case 0 :
-					// map 的标记为0时画出地板 //在指定位置[描绘]出我们所加载的图形，以下同 \
+					// map 的标记为0时画出地板 //在指定位置[描绘]出我们所加载的图形，以下同 
 					g.drawImage(floorImage, j * CS, x*CS, this) ;
 					break;  
 				case 1 : 
@@ -193,6 +225,8 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 			JOptionPane.showMessageDialog(this, "恭喜通过一关");
 	}
 	
+	
+	
 		/**
 		* 用于判定是否允许移动的发生，被move()函数调用
 		* @param x
@@ -235,23 +269,28 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 	* @param event
 	*/
 		private void move(int event) {
+			int Step = 1;
 			//以转换器判断相关事件，仅执行符合[规范]的操作。
 			switch (event) {
 			case LEFT:
 				//依次判定事件
-				if (isAllow(x-1, y)) x--;
+				if (isAllow(x-1, y)) 
+					x = x - Step;
 				direction = LEFT;
 				break;
 			case RIGHT:
-				if (isAllow(x+1, y)) x++;
+				if (isAllow(x+1, y)) 
+					x = x + Step;
 				direction = RIGHT;
 				break;
 			case UP:
-				if (isAllow(x, y-1)) y--;
+				if (isAllow(x, y-1)) 
+					y = y - Step;
 				direction = UP;
 				break;
 			case DOWN:
-				if (isAllow(x, y+1)) y++;
+				if (isAllow(x, y+1)) 
+					y = y + Step;
 				direction = DOWN;
 				break;
 			default:
@@ -265,12 +304,51 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 		public void keyTyped(KeyEvent e) {	
 		}
 		
+		private class uncontrol extends Thread {
+			Random rand = new Random();
+			int x;
+			int y;
+			int n;
+			uncontrol(int x, int y){
+				x = x;
+				y = y;
+			}
+			public synchronized void run() {
+				while(true) {
+					n = (int) rand.nextInt(4);
+					switch (n) {
+						case 0:
+							x++;
+							break;
+						case 1:
+							x--;
+							break;
+						case 2:
+							y--;
+							break;
+						case 3: 
+							y++;
+							break;
+					}
+					try {
+						Thread.sleep(100);
+					}catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
 		private class AnimationThread extends Thread {
 			public synchronized void run() {
 				while (true) {
+					/*if (count == 0)
+						count = 1;
+					else if (count == 1)
+						count = 0;*/
 					repaint();
 					try {
-						Thread.sleep(500);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -295,7 +373,6 @@ public class MyPanel extends JPanel implements KeyListener, MouseListener{
 					this.x++;
 					System.out.println(this.x);
 					direction = RIGHT;
-					
 					// 重绘画面。
 					//repaint();
 				}
